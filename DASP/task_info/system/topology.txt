@@ -1,0 +1,16 @@
+[
+   {
+      "ID": "Car0",
+      "PORT": [10000, 10001], 
+      "adjID": ["UE1"], 
+      "adjDirection": [1],
+      "datalist": {}
+   },
+   {
+      "ID": "UE1",
+      "PORT": [10035, 10036], 
+      "adjID": ["Car0"], 
+      "adjDirection": [1],
+      "datalist": {}
+   }
+]

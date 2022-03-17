@@ -1,0 +1,153 @@
+# DASP for AirSim使用说明手册
+清华大学 严虎 2022/03/17
+## 1. 运行环境
+
+### 安装Airsim carintercept环境
+
+[Github地址](https://github.com/zewuzheng17/Airsim)
+
+1. install visual studio 2019 https://docs.microsoft.com/en-us/visualstudio/releases/2019/release-notes
+    - select 使用C++的桌面开发” under 工作负荷
+    - select “Windows 10 SDK 10.0.18362”
+    - select 使用.NET桌面开发
+    - after installation complete, restart destop
+
+2. install Unreal engine https://www.unrealengine.com/zh-CN/
+    - you need to sign up for an epic game account
+    - install epic games
+    
+    <img width="640" height="640" src="https://user-images.githubusercontent.com/85209880/144985961-1da6be19-5e89-4fd1-a2c2-f09471875dcd.png"/>
+    
+    - install unreal engine 
+    
+    <img width="640" height="640" src="https://user-images.githubusercontent.com/85209880/144958513-2d4bb89b-0682-4177-a71c-4dd4e61806bb.png"/>
+    
+    - select version 4.27
+    
+3. install Airsim
+    - open "Developer Command Prompt for VS 2019"
+    - git clone https://github.com/zewuzheng17/Airsim.git(if dont work, go to https://github.com/zewuzheng17/Airsim and download zip file directly)
+    - cd Airsim
+    - build.cmd(you'd better use vpn)
+ 
+4. Car intercept project
+    - link: https://pan.baidu.com/s/13iTxV4SKaksK9brcbeJs2A 提取码：zzw1
+    - unzip Carintercept
+    - open unreal editor, choose CarIntercept\CarIntercept.uproject project
+
+5. Airsim python client
+    - prerequisite: 'requests','pymysql', 'msgpack-rpc-python', 'numpy', 'opencv-contrib-python', 'gym'
+    - cd Airsm/Airsim/PythonClient
+    - run pip install -e . (install local airsim package in python)
+    - cd Airsim/Airsim/pythonClient/reinforcement_learning/
+    - run pip install -e . (install local airgym package in python)
+    
+6. settings.json
+    - put ./test/settings.json into 此电脑/文档/Airsim/ 
+    
+    
+### Use other environment from unreal marketplace and add airsim as plugin
+   - https://zhuanlan.zhihu.com/p/271953448
+
+
+## 2. 运行
+DASP(Distributed Algorithm Simulation Platform)能够模拟分布式环境、验证DAPP(分布式算法)可行性，另外包含了调试机制，支持多个算法并行运行。
+
+DASP for AirSim是针对AirSim环境定制的分布式平台，可以通过Airsim连接UE，未来将会支持多UE联合仿真。
+
+### 2.1 运行流程
+1. 解压DASP.zip
+2. 配置好相应的软件环境
+3. 根据实际拓扑修改基本拓扑文件 `DASP/task_info/system/topology.txt`
+4. 若有新的DAPP，在`DASP/task_info/`下创建新文件夹，文件夹名即DAPP名称，文件夹下导入`question.py`算法文件和`topology.txt`拓扑文件
+5. 在DASP文件夹目录下（勿进入DASP/DASP文件夹），运行监控脚本
+
+   `python ./script_PC/moniter.py`
+
+6. 在另一个终端下，运行控制脚本
+   
+   `python ./script_PC/demo1.py`
+
+7. 第6步执行后可在运行监控脚本的终端看到运行结果。demo1下DASP启动了一个包含了12个节点的分布式网络，执行了系统任务（维护拓扑网络），并在2秒后运行了CreateBFStree示例DAPP。
+
+### 2.2 文件说明
+#### 2.2.1 控制脚本
+DASP的控制脚本模板`demo1.py`如下
+```python
+import time 
+import sys
+sys.path.insert(1,".") # 把上一级目录加入搜索路径
+from DASP.module import Node
+from DASP.control import ControlMixin
+
+nodeNum = 12  # 节点数量
+rootnode = "room_1" # 根节点ID
+nodelist = [] # 节点进程列表
+Controlmixin = ControlMixin("Pc") # 控制函数集合
+
+# 启动节点进程
+for i in range(nodeNum):
+    node = Node(i+1)
+    nodelist.append(node)
+
+time.sleep(2)
+DAPPname = "宽度优先生成树"
+print("开始任务："+DAPPname)
+Controlmixin.StartTask(DAPPname,rootnode)
+```
+nodeNum为节点数量，rootnode为系统根节点ID
+
+节点进程由类Node启动，Node初始化时输入`mode=True`可打印节点进程输出信息
+
+ControlMixin为控制函数集合类，仿真时初始化参数"Pc"，实际运行时初始化参数"PI"，控制函数类包含运行DAPP、暂停DAPP、恢复DAPP、停止DAPP等功能，具体可参考`DASP/control/ControlMixin.py`源码。
+
+网络的基本拓扑由`DASP/task_info/system/topology.txt`定义。每一个DAPP为`DASP/task_info/system/`下的一个子文件夹，包含了`question.py`算法文件和`topology.txt`拓扑文件，各任务的拓扑文件为基本拓扑的子图。
+
+##### 其他控制脚本
+在script_PC文件夹下包含了一些其他示例脚本
+
+`demo1.py`：基本模板，启动系统并运行分布式算法
+
+`demo2.py`：并行执行DAPP示例
+
+`demo3.py`：DAPP的暂停、恢复、终止示例
+
+`demo4.py`：DASP逐节点启动示例
+
+`demo5.py`：故障重连示例，模拟节点故障，并在节点重启后重连进系统
+
+#### 2.2.2 监控脚本
+`DASP/moniter.py`为监控脚本，监听本地50000端口，节点进程的信息将发送到监控脚本显示。
+
+#### 2.2.3 任务文件
+
+`task_info`为DAPP存储文件夹，每个DAPP为一个子文件夹，包含了`question.py`算法文件和`topology.txt`拓扑文件。
+
+其中`system`子文件夹下的`topology.txt`为基础拓扑，其他子文件夹下的拓扑为任务拓扑，
+
+`system`子文件夹下的`autostart.csv`为自启动DAPP配置文件，第一列`DAPP`为需要随系统启动的DAPP名称；第二列`rootnode`为DAPP的启动节点，可以选择指定和不指定（"default"），如果指定则一定会以该节点为根节点启动（若该节点故障则不启动），如果不指定会以当前网络中字典序最小的节点为根节点启动DAPP；time为DAPP启动的延时时间，支持浮点数输入。
+
+#### 2.2.4 DASP源码
+`module`为DASP基本实现模块
+
+`pysnooperdb`为调试功能实现模块
+
+`system`为节点进程启动模块
+
+`control`为控制函数模块
+
+
+### 3.3 文件说明
+#### 3.3.1 控制脚本
+与[2.2.1](#221-控制脚本)类似，区别在于ControlMixin初始化参数需设置为"PI"。
+
+#### 3.3.2 其他文件
+`broadcast_command.py`可向局域网内的所有树莓派广播执行command指令，默认为重启，修改后可执行其他指令。
+
+`broadcast_file.py`可将DASP文件夹下的所有文件同步到局域网内的树莓派，一般用于更新拓扑和算法程序
+
+`MysqlBackup2Server.py`用于备份树莓派下的数据库文件
+
+
+
+

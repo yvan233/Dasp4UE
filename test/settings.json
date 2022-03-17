@@ -1,0 +1,52 @@
+{
+  "SettingsVersion": 1.2,
+  "SimMode": "Car",
+  "ViewMode":"",
+  "ClockSpeed": 1,
+  "CameraDefaults": {
+    "CaptureSettings": [
+      {
+        "ImageType": 0,
+        "Width": 512,
+        "Height": 288
+      }
+    ]},
+  "OriginGeopoint": {
+    "Latitude": 47.641468,
+    "Longitude": -122.140165,
+    "Altitude": 122
+  },
+  "PawnPaths": {
+                "BlueCar":{"PawnBP":"Class'/AirSim/VehicleAdv/SUV/SuvCarPawn.SuvCarPawn_C'"},
+                "RedCar":{"PawnBP":"Class'/Game/SUV/SuvCarPawn.SuvCarPawn_C'"}
+                },
+  "Vehicles": {
+    "Car0": {
+      "VehicleType": "PhysXCar",
+      "DefaultVehicleState": "",
+      "AutoCreate": true,
+      "IsFpvVehicle": true,
+      "PawnPath": "RedCar", 
+      "EnableCollisionPassthrogh": false,
+      "EnableCollisions": true,
+      "AllowAPIAlways": true,
+      "RemoteControlID":-1,
+      "X": 0, "Y": 0, "Z": 0,
+      "Pitch": 0, "Roll": 0, "Yaw": 90,
+      "Sensors": {    "Lidar1": {
+        "SensorType": 6,
+        "Enabled" : true,
+        "PointsPerSecond": 20000
+      } }
+    }
+  },
+  "Recording": {
+    "RecordOnMove": false,
+    "RecordInterval": 0.001,
+    "Folder": "D:/Qiyuan/Airsim_learning/record_images",
+    "Enabled": false,
+    "Cameras": [
+        { "CameraName": "0", "ImageType": 0, "PixelsAsFloat": false,  "VehicleName": "Escaper", "Compress": true }
+    ]
+  }
+}
