@@ -16,23 +16,26 @@ class DaspCarServer():
     def run(self):
         self.thread.start()
         while True:
-            server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            server.bind((self.host, self.port))
-            server.listen(10) #接收的连接数
-            conn, addr = server.accept()
-            print(f'Connected by {addr[0]}:{addr[1]}')
-            with conn:
-                while True:
-                    pack = self.recv(conn)
-                    # 发送端close()
-                    if pack == b"":
-                        print(f'{addr[0]}:{addr[1]} disconnect')
-                        break
-                    else:
-                        # 数据处理
-                        thread = Thread(target=self.MessageHandle, args = (pack, conn), )    
-                        thread.start()
-
+            try:
+                server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                server.bind((self.host, self.port))
+                server.listen(10) #接收的连接数
+                conn, addr = server.accept()
+                print(f'Connected by {addr[0]}:{addr[1]}')
+                with conn:
+                    while True:
+                        pack = self.recv(conn)
+                        # 发送端close()
+                        if pack == b"":
+                            print(f'{addr[0]}:{addr[1]} disconnect')
+                            break
+                        else:
+                            # 数据处理
+                            thread = Thread(target=self.MessageHandle, args = (pack, conn), )    
+                            thread.start()
+            except ConnectionResetError:
+                pass
+            
     def MessageHandle(self, pack, sock):
         """
         数据处理函数

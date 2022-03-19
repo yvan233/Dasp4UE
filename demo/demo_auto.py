@@ -1,3 +1,4 @@
+# 自动控制demo
 import time
 import socket
 from DaspCarClient import DaspCarClient,get_image,get_lidar
@@ -11,7 +12,7 @@ if __name__ == '__main__':
 
     # 获取车辆状态
     state = client.get_state()
-    print(state)  
+    print("车辆状态",state)  
 
     # 开始记录数据
     print("start record")
@@ -24,28 +25,44 @@ if __name__ == '__main__':
 
     # 获取图像
     img = get_image(remote_ip)
-    print(img)
+    # print(img)
 
     # 获取雷达
     lidar = get_lidar(remote_ip)
-    print(lidar)
+    # print(lidar)
 
     # 前进
-    action = {"throttle": 1,"steering": 30,"brake": 0}
+    action = {"throttle": 1,"steering": 0,"brake": 0}
     client.do_action(action)
+    print("前进",action)
     time.sleep(3)
 
-    # 后退
-    action = {"throttle": -1,"steering": 50,"brake": 0}
+    # 转向
+    action = {"throttle": 1,"steering": 50,"brake": 0}
     client.do_action(action)
-    time.sleep(3)
+    print("右转",action)
+    time.sleep(1.3)
+
+    # 前进
+    action = {"throttle": 1,"steering": 0,"brake": 0}
+    client.do_action(action)
+    print("前进",action)
+    time.sleep(2)
+
+    # 后退
+    action = {"throttle": -1,"steering": 0,"brake": 0}
+    client.do_action(action)
+    print("后退",action)
+    time.sleep(2.5)
 
     # 刹车
     action = {"throttle": 0,"steering": 0,"brake": 1}
     client.do_action(action)
-    time.sleep(3)
+    print("刹车",action)
+    time.sleep(2)
 
     # 重置
+    print("reset")
     client.reset()
 
     # 结束记录数据

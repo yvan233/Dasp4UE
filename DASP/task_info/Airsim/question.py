@@ -1,11 +1,10 @@
 import socket
 from .DaspCarServer import DaspCarServer
 
-
 def taskFunction(self,id,adjDirection,datalist):
     type = datalist["Type"]
     name = datalist["Name"]
-    # 摄像机视角
+    # Car
     if type == "Car":
         UE_ip = datalist["Ip"]
         host = socket.gethostbyname(socket.gethostname())
