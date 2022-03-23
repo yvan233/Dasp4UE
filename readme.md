@@ -28,13 +28,13 @@ Gym模式
 
 ### 安装Python3
 
-如果已经有Python3环境，则可以跳过这一步，到[安装DASP for AirSim](###安装DASP for AirSim)。
+如果已经有Python3环境，则可以跳过这一步，到[安装DASP for AirSim](#2.2)。
 
 参考这个[链接](https://www.runoob.com/python3/python3-install.html)完成Python3的安装，安装时需要将Python添加到系统变量。
 
 **环境验证**：安装成功后，按 Win+R 键，输入 cmd 调出命令提示符。输入 python，如果出现Python 3.x.x的提示，说明Python3环境安装成功。
 
-### 安装DASP for AirSim
+### <span id="2.2">安装DASP for AirSim</span>
 
 1. 获取项目文件
    - [文件链接](https://cloud.tsinghua.edu.cn/d/500440f3db224883a1d2/files/?p=%2FDASP%20for%20AirSim.zip)
@@ -93,19 +93,19 @@ Gym模式
 
    **备注**：`F`为切换第一人称视角，`/`为切换第三人称视角，更多说明通过`F1`查看。
 
-5. 将[demo/settings.json](demo/settings.json) 添加到`此电脑/文档/AirSim/` ，这是AirSim环境的配置文件。此时再运行City.exe会出现红色小车。
+5. 将[demo/settings.json](demo/settings.json) 添加到`此电脑/文档/AirSim/` ，覆盖原文件，这是AirSim环境的配置文件。此时再运行City.exe会出现红色小车。
 
    
 
 ## 定制UE环境
 
-如果不需要自定义UE环境，可以跳过本节内容，到[DASP for AirSim使用说明](##DASP for AirSim使用说明)。
+如果不需要自定义UE环境，可以跳过本节内容，到[DASP for AirSim使用说明](#4)。
 
 ### 安装Unreal Engine
 
 - 在[Unreal engine官网](https://www.unrealengine.com/zh-CN)注册一个epic游戏账户
 
-- [下载`Epic Games Launcher`](https://www.unrealengine.com/zh-CN/download)
+- 下载[`Epic Games Launcher`](https://www.unrealengine.com/zh-CN/download)
 
 
 - 运行`Epic Games Launcher`，在`库`选项卡里，点击`添加版本`，选择`Unreal 4.27`。然后等待安装完成。
@@ -145,7 +145,7 @@ Gym模式
 
 ### 定制UE环境
 
-过程请参考这个[链接](https://zhuanlan.zhihu.com/p/271953448)
+流程参考这个[链接](https://zhuanlan.zhihu.com/p/271953448)
 
 本项目的工程文件在这个[链接](https://cloud.tsinghua.edu.cn/d/500440f3db224883a1d2/?p=%2Fproject&mode=list)中，下载所有文件后，点击`city project.zip.001`进行解压即可得到工程文件。
 
@@ -153,7 +153,7 @@ Gym模式
 
 
 
-## DASP for AirSim使用说明
+## <span id="4">DASP for AirSim使用说明</span>
 
 DASP for AirSim有三种运行模式，自动/手动/Gym，并分别提供了demo脚本。
 
@@ -167,7 +167,7 @@ DASP for AirSim有三种运行模式，自动/手动/Gym，并分别提供了dem
    python script/start.py
    ```
 
-   若看到**[Car0]Airsim: 开始执行**的提示后，说明系统已和仿真环境建立连接。
+   若看到`[Car0]Airsim: 开始执行`的提示后，说明系统已和仿真环境建立连接。
 
 3. 在另一个终端下，运行自动控制脚本
 
@@ -177,7 +177,7 @@ DASP for AirSim有三种运行模式，自动/手动/Gym，并分别提供了dem
 
    在此终端下会打印发送的控制指令，仿真环境中的小车会执行相应的指令。
 
-4. 第3步执行完成后可在系统目录`D:\Qiyuan\Record`中看到脚本运行时间为名的文件夹，其中包含了小车物理状态csv文件和运行期间的视频、雷达数据。
+4. 第3步执行完成后可在系统目录`D:\Qiyuan\Record`中看到以时间为名的文件夹，其中包含了小车物理状态csv文件和运行期间的视频、雷达数据。
 
 ### Gym模式
 
@@ -193,7 +193,7 @@ DASP for AirSim有三种运行模式，自动/手动/Gym，并分别提供了dem
 
    小车会进行随机漫游，发生碰撞后会重置到初始状态，共执行20次。
 
-4. 完成后可在系统目录`D:\Qiyuan\Record`中看到运行时间为名的文件夹，其中包含了小车每一次碰撞前的物理状态csv文件和运行期间的视频、雷达数据。
+4. 完成后可在系统目录`D:\Qiyuan\Record`中看到以时间为名的文件夹，其中包含了小车每一次碰撞前的物理状态csv文件和运行期间的视频、雷达数据。
 
 ### 手动模式
 
@@ -252,19 +252,19 @@ nodeNum为节点数量，rootnode为系统根节点ID。
 
 节点进程由类Node启动，Node初始化时输入`mode=True`可打印节点进程输出信息。
 
-ControlMixin为控制函数集合类，仿真时初始化参数"Pc"，控制函数类包含运行DAPP、暂停DAPP、恢复DAPP、停止DAPP等功能，具体可参考[`DASP/control/ControlMixin.py`](DASP\control\ControlMixin.py)源码。
+ControlMixin为控制函数集合类，仿真时初始化参数"Pc"，控制函数类包含运行DAPP、暂停DAPP、恢复DAPP、停止DAPP等功能，具体可参考[`DASP/control/ControlMixin.py`](DASP/control/ControlMixin.py)源码。
 
 `moniter`为监控函数，监听本地50000端口，节点进程的信息将发送到监控脚本显示。
 
-网络的基本拓扑由[`DASP/task_info/system/topology.txt`](DASP\task_info\system\topology.txt)定义。每一个DAPP为`DASP/task_info/system/`下的一个子文件夹，包含了`question.py`算法文件和`topology.txt`拓扑文件，各任务的拓扑文件为基本拓扑的子图。
+网络的基本拓扑由[`DASP/task_info/system/topology.txt`](DASP/task_info/system/topology.txt)定义。每一个DAPP为`DASP/task_info/system/`下的一个子文件夹，包含了`question.py`算法文件和`topology.txt`拓扑文件，各任务的拓扑文件为基本拓扑的子图。
 
-**仿真引擎的IP及小车名字在[`DASP/task_info/AirSim/topology.txt`](DASP\task_info\Airsim\topology.txt)中配置。**
+**仿真引擎的IP及小车名字在[`DASP/task_info/AirSim/topology.txt`](DASP/task_info/Airsim/topology.txt)中配置。**
 
 DASP更多细节请参考[链接](https://github.com/yvan233/DASP)。
 
 #### 车辆控制API
 
-车辆API在文件[`DaspCarClinet.py`](demo\DaspCarClient.py)中定义。数据格式在[`AirSimCarAgent.py`](DASP\task_info\Airsim\AirSimCarAgent.py)中定义。
+车辆API在文件[`DaspCarClinet.py`](demo/DaspCarClient.py)中定义。数据格式在[`AirSimCarAgent.py`](DASP/task_info/Airsim/AirSimCarAgent.py)中定义。
 
 - `get_state`：获取车辆在虚幻环境中的状态。是一个字典数据，包含时间戳、车辆位置、姿态、速度、油门、方向、刹车、线速度、线加速度、角速度、角加速度。
 - `get_collision`： 获取车辆的碰撞信息。是一个字典数据，包含是否碰撞、碰撞物体。
@@ -277,7 +277,7 @@ DASP更多细节请参考[链接](https://github.com/yvan233/DASP)。
 
 #### Gym API
 
-gym模型在文件[`dasp_car_env.py`](PythonClient\reinforcement_learning\airgym\envs\dasp_car_env.py)中定义。
+gym模型在文件[`dasp_car_env.py`](PythonClient/reinforcement_learning/airgym/envs/dasp_car_env.py)中定义。
 
 - `step`：在每个时间点上，智能体执行 action，环境返回上一次 action 的观测和奖励
   - action已离散化，在`dasp_car_env.py`中的`_do_action`函数。
