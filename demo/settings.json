@@ -39,14 +39,5 @@
         "PointsPerSecond": 20000
       } }
     }
-  },
-  "Recording": {
-    "RecordOnMove": false,
-    "RecordInterval": 0.001,
-    "Folder": "D:/Qiyuan/Airsim_learning/record_images",
-    "Enabled": false,
-    "Cameras": [
-        { "CameraName": "0", "ImageType": 0, "PixelsAsFloat": false,  "VehicleName": "Escaper", "Compress": true }
-    ]
   }
 }

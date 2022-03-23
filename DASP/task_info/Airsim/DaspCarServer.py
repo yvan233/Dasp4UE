@@ -3,14 +3,14 @@ import traceback
 import json
 import time
 from threading import Thread
-from .CarAgent import CarAgent
+from .AirSimCarAgent import AirSimCarAgent
 
 class DaspCarServer():
     def __init__(self, host = "localhost", port = 5000, UE_ip = "", vehicle_name = "", remote_ip = ""):
         self.host = host
         self.port = port
-        self.car = CarAgent(ip = UE_ip, vehicle_name= vehicle_name)
-        self.record = CarAgent(ip = UE_ip)
+        self.car = AirSimCarAgent(ip = UE_ip, vehicle_name= vehicle_name)
+        self.record = AirSimCarAgent(ip = UE_ip)
         self.thread = Thread(target=self.record.upload_video_lidar, args = (remote_ip,), daemon=True)
 
     def run(self):

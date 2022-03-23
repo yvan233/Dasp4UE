@@ -1,7 +1,7 @@
+# gym demo
 import airgym
 import airsim
 import gym
-import copy
 import time
 import socket
 

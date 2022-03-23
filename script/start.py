@@ -1,9 +1,9 @@
 # 启动系统并运行分布式算法
-from threading import Thread
-from moniter import moniter
 import time 
 import sys
 sys.path.insert(1,".") # 把上一级目录加入搜索路径
+from threading import Thread
+from moniter import moniter
 from DASP.module import Node
 from DASP.control import ControlMixin
 

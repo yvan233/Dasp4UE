@@ -6,19 +6,19 @@
       "adjDirection": [1],
       "datalist": {
          "Type": "Car",
-         "Name": "Escaper",
-         "Ip":"166.111.140.38"
+         "Name": "Car0",
+         "Ip":"127.0.0.1"
          }
    },
    {
       "ID": "UE1",
-      "PORT": [10035, 10036], 
+      "PORT": [10010, 10011], 
       "adjID": ["Car0"], 
       "adjDirection": [1],
       "datalist": {
          "Type": "UE",
          "Name": "UE1",
-         "Ip":"59.66.17.186"
+         "Ip":"127.0.0.1"
       }
    }
 ]
