@@ -42,16 +42,13 @@ Gym模式
 
 2. Python依赖
 
-   - 通过pip或者conda安装以下包`requests`，`pymysql`，`msgpack-rpc-python`， `numpy`， `opencv-contrib-python`，`gym`
+   - 通过pip或者conda安装以下包`requests`，`pymysql`，`gym`
 
      以管理员方式运行cmd
 
      ```
      pip install requests
      pip install pymysql
-     pip install msgpack-rpc-python
-     pip install numpy
-     pip install opencv-contrib-python
      pip install gym
      ```
 
