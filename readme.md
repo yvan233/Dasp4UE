@@ -4,7 +4,7 @@ DASP for AirSim是基于[AirSim](https://github.com/microsoft/AirSim)和[虚幻�
 
 仿真平台部署图：
 
-[<img width="600" height="420" src= "docs/images/architecture.png">]()
+<img width="600" height="420" src= "docs/images/architecture.png" align='left'>
 
 **查看快速演示**
 
@@ -162,7 +162,7 @@ DASP for AirSim有三种运行模式，自动/手动/Gym，并分别提供了dem
 
 1. 运行City.exe
 
-2. 在DASP for AirSim文件夹目录下，运行系统启动脚本
+2. **在DASP for AirSim文件夹目录**下，运行系统启动脚本
 
    ```
    python script/start.py
