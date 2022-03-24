@@ -4,21 +4,21 @@ DASP for AirSim是基于[AirSim](https://github.com/microsoft/AirSim)和[虚幻�
 
 仿真平台部署图：
 
-[<img width="600" height="420" src= "docs\images\architecture.png">]()
+[<img width="600" height="420" src= "docs/images/architecture.png">]()
 
 **查看快速演示**
 
 手动模式
 
-[<img width="540" height="360" src= "docs\images\Manul Demo.png">](https://cloud.tsinghua.edu.cn/d/500440f3db224883a1d2/files/?p=%2Fdemo%2Fdemo_manul.mp4)
+[<img width="540" height="360" src= "docs/images/Manul Demo.png">](https://cloud.tsinghua.edu.cn/d/500440f3db224883a1d2/files/?p=%2Fdemo%2Fdemo_manul.mp4)
 
 自动模式
 
-[<img width="640" height="360" src= "docs\images\Auto Demo.png">](https://cloud.tsinghua.edu.cn/d/500440f3db224883a1d2/files/?p=%2Fdemo%2Fdemo_auto.mp4)
+[<img width="640" height="360" src= "docs/images/Auto Demo.png">](https://cloud.tsinghua.edu.cn/d/500440f3db224883a1d2/files/?p=%2Fdemo%2Fdemo_auto.mp4)
 
 Gym模式
 
-[<img width="640" height="360" src= "docs\images\Gym Demo.png">](https://cloud.tsinghua.edu.cn/d/500440f3db224883a1d2/files/?p=%2Fdemo%2Fdemo_gym.mp4)
+[<img width="640" height="360" src= "docs/images/Gym Demo.png">](https://cloud.tsinghua.edu.cn/d/500440f3db224883a1d2/files/?p=%2Fdemo%2Fdemo_gym.mp4)
 
 
 
