@@ -26,7 +26,7 @@ Gym模式
 
 ## DASP for AirSim安装说明
 
-仿真平台要求硬件环境是Windows操作系统。
+仿真平台要求硬件环境是Windows操作系统。显卡推荐配置为GTX 1660及以上。
 
 ### 安装Python3
 
