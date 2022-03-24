@@ -168,7 +168,7 @@ DASP for AirSim有三种运行模式，自动/手动/Gym，并分别提供了dem
    python script/start.py
    ```
 
-   若看到`[Car0]Airsim: 开始执行`的提示后，说明系统已和仿真环境建立连接。
+   若看到`[Car0]Airsim: 开始执行`的提示，说明系统已和仿真环境建立连接。
 
 3. 在另一个终端下，运行自动控制脚本
 
