@@ -4,9 +4,9 @@ DASP for AirSim是基于[AirSim](https://github.com/microsoft/AirSim)和[虚幻�
 
 仿真平台部署图：
 
-<img width="600" height="420" src= "docs/images/architecture.png" align='left'>
+<img width="600" height="420" src= "docs/images/architecture.png">     
 
-
+***
 
 **查看快速演示**
 
