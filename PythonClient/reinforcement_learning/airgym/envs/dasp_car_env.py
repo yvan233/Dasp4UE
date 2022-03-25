@@ -7,7 +7,7 @@ from gym import spaces
 from airgym.envs.airsim_env import AirSimEnv
 
 import socket
-from DaspCarClient import DaspCarClient,get_image,get_lidar
+from .DaspCarClient import DaspCarClient,get_image,get_lidar
 
 class AirSimCarDaspEnv(AirSimEnv):
     def __init__(self, hostIP, localIP):

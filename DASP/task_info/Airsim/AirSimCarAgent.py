@@ -9,6 +9,19 @@ import socket
 from threading import Thread
 
 class AirSimCarAgent():
+    """
+    AirSimCarAgent用于在AirSim模拟器上实现车辆的控制，并记录控制过程中的图片，以及车辆的状态和碰撞信息。
+    实现的功能包括：
+        1. 初始化AirSim模拟器
+        2. 获取车辆的状态信息
+        3. 获取车辆的碰撞信息
+        4. 控制车辆
+        5. 获取图像数据
+        6. 获取雷达数据
+        7. 记录车辆的控制过程
+        8. 停止记录
+        9. 重置车辆
+    """
     def __init__(self, ip = "", vehicle_name = "", control_flag = False):
         image_size = (84, 84, 1)  # image shape for default gym env
         ## name
@@ -19,7 +32,7 @@ class AirSimCarAgent():
         self.connect(ip, control_flag)
 
     def connect(self, ip, control_flag):
-        ## car client, connect to airsim unreal simulator
+        # 连接AirSim模拟器
         self.car = airsim.CarClient(ip=ip)
         self.car.confirmConnection()
         self.car.enableApiControl(True,self.name) if not control_flag else self.car.enableApiControl(False,self.name)
@@ -48,6 +61,7 @@ class AirSimCarAgent():
         return state
 
     def get_collision(self):
+        # 获取车辆碰撞信息
         collision_info = self.car.simGetCollisionInfo(self.name)
         info = {
             "has_collided":collision_info.has_collided,
@@ -56,9 +70,11 @@ class AirSimCarAgent():
         return info
 
     def reset(self):
+        # 重置车辆
         self.car.reset()
 
     def do_action(self, action):
+        # 控制车辆
         car_controls = airsim.CarControls()
         car_controls.throttle = action["throttle"]
         car_controls.steering = action["steering"]/50
@@ -69,6 +85,7 @@ class AirSimCarAgent():
         self.car.setCarControls(car_controls, self.name)
 
     def get_image(self):
+        # 获取车辆图像
         img_response = self.car.simGetImage("0", airsim.ImageType.Scene, self.name)
         np_response_image = np.asarray(bytearray(img_response), dtype="uint8")
         decoded_frame = cv2.imdecode(np_response_image, cv2.IMREAD_COLOR)
@@ -82,6 +99,7 @@ class AirSimCarAgent():
         return image, data
 
     def get_lidar(self):
+        # 获取车辆雷达数据
         lidar_data = self.car.getLidarData("Lidar1", self.name)
 
         if (len(lidar_data.point_cloud) < 3):
@@ -97,6 +115,7 @@ class AirSimCarAgent():
 
 
     def startRecording(self, rootpath = "D:/Qiyuan/Record"):
+        # 开始记录
         timelabel = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime(time.time()))
         self.path = os.path.join(rootpath, timelabel)
         os.system('mkdir "%s"' %self.path) 
@@ -108,9 +127,11 @@ class AirSimCarAgent():
         self.recordflag = True
 
     def stopRecording(self):
+        # 停止记录
         self.recordflag = False
 
     def upload_video_lidar(self,remote_ip):
+        # 上传视频和雷达数据
         clisocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         while True:
             image, data = self.get_image()
@@ -134,15 +155,15 @@ class AirSimCarAgent():
 
 if __name__ == '__main__':
     # 开启udp视频流
-    UE_ip = "59.66.17.186"
+    UE_ip = "127.0.0.1"
     remote_ip = "127.0.0.1"
 
-    record = CarAgent(ip = UE_ip)
+    record = AirSimCarAgent(ip = UE_ip)
     thread = Thread(target=record.upload_video_lidar, args = (remote_ip,), daemon=True)
     thread.start()
     record.startRecording()
 
-    car = CarAgent(ip = UE_ip, vehicle_name= "Escaper")
+    car = AirSimCarAgent(ip = UE_ip, vehicle_name= "Escaper")
     print(car.get_car_state())
     print(car.get_collision())
     # 前进

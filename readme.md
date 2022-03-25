@@ -1,6 +1,6 @@
 ## 欢迎来到 DASP for AirSim
 
-DASP for AirSim是基于[AirSim](https://github.com/microsoft/AirSim)和[虚幻引擎](https://www.unrealengine.com/)构建的分布式汽车仿真平台。它通过控制中间件提供了车辆仿真的物理状态、视景和雷达等数据，并支持人工手柄操作或是智能算法控制。其中[DASP](https://github.com/yvan233/DASP)能够模拟分布式环境、验证分布式算法可行性，并包含了调试机制，支持多个算法并行运行，在未来将支持多计算机联合仿真。
+DASP for AirSim是基于[AirSim](https://github.com/microsoft/AirSim)和[虚幻引擎](https://www.unrealengine.com/)构建的分布式汽车仿真平台。它通过控制中间件提供了车辆仿真的物理状态、视景和雷达等数据，并支持人工手柄操作或是智能算法控制。其中[DASP](https://github.com/yvan233/DASP)能够模拟分布式环境、验证分布式算法可行性，并包含了调试机制，支持多个算法并行运行，在未来将支持多计算机联合仿真。我们正在努力构建更多的功能，并且欢迎您的加入。
 
 仿真平台部署图：
 
@@ -51,6 +51,8 @@ Gym模式
      ```
      pip install requests
      pip install pymysql
+     pip install numpy
+     pip install msgpack-rpc-python
      pip install gym
      ```
 
