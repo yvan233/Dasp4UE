@@ -44,7 +44,7 @@ Gym模式
 
 2. Python依赖
 
-   - 通过pip或者conda安装以下包`requests`，`pymysql`，`gym`
+   - 通过pip或者conda安装以下包`requests`，`pymysql`，`numpy`，`msgpack-rpc-python`，`gym`，
 
      以管理员方式运行cmd
 
