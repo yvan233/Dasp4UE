@@ -16,6 +16,7 @@ class Node:
         thread: 节点获取输出数据线程
         
         """
+    PYTHON_LAUNCHER = "python"
         
     def __init__(self, num, mode = False, printdata = []):
         """
@@ -25,7 +26,7 @@ class Node:
         """
         self.num = num
         # -u参数是为了读取缓冲区中的打印信息
-        self.proc = subprocess.Popen(['python','-u','./DASP/system/initial.py', str(self.num)],\
+        self.proc = subprocess.Popen([self.PYTHON_LAUNCHER,'-u','./DASP/system/initial.py', str(self.num)],\
             shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         self.printdata = printdata
         print("[node{}]pid:{}".format(num,self.proc.pid))
