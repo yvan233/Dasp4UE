@@ -75,7 +75,7 @@ def get_lidar(remote_ip = "127.0.0.1"):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind((remote_ip, 5002))
     data, address = sock.recvfrom(65535)
-    points = np.asarray(bytearray(data), dtype=np.dtype('f4'))
+    points = np.frombuffer(data, dtype=np.dtype('f4'))
     points = np.reshape(points, (int(points.shape[0]/3), 3)) # reshape array of floats to array of [X,Y,Z]
     sock.close()
     return points
