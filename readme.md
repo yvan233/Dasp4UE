@@ -79,7 +79,7 @@ Gym模式
 
 1. 获取发布的城市环境
 
-   - [文件链接](https://cloud.tsinghua.edu.cn/d/500440f3db224883a1d2/files/?p=%2FDASP%20for%20AirSim.zip)
+   - [文件链接](https://cloud.tsinghua.edu.cn/d/500440f3db224883a1d2/files/?p=%2FCity.zip)
    - 解压`City.zip`	
 
 2. 运行City.exe。
