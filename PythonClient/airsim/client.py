@@ -10,8 +10,12 @@ import time
 import math
 import logging
 
+RPCLIB_PORT_CV = 41451
+RPCLIB_PORT_CAR = 41461
+RPCLIB_PORT_MULTIROTOR = 41471
+
 class VehicleClient:
-    def __init__(self, ip = "", port = 41451, timeout_value = 3600):
+    def __init__(self, ip = "", port = RPCLIB_PORT_CV, timeout_value = 3600):
         if (ip == ""):
             ip = "127.0.0.1"
         self.client = msgpackrpc.Client(msgpackrpc.Address(ip, port), timeout = timeout_value, pack_encoding = 'utf-8', unpack_encoding = 'utf-8')
@@ -459,6 +463,8 @@ class VehicleClient:
 
     def simGetVehiclePose(self, vehicle_name = ''):
         """
+        The position inside the returned Pose is in the frame of the vehicle's starting point
+        
         Args:
             vehicle_name (str, optional): Name of the vehicle to get the Pose of
 
@@ -483,6 +489,8 @@ class VehicleClient:
 
     def simGetObjectPose(self, object_name):
         """
+        The position inside the returned Pose is in the world frame
+
         Args:
             object_name (str): Object to get the Pose of
 
@@ -789,6 +797,8 @@ class VehicleClient:
         """
         Get Ground truth kinematics of the vehicle
 
+        The position inside the returned KinematicsState is in the frame of the vehicle's starting point
+
         Args:
             vehicle_name (str, optional): Name of the vehicle
 
@@ -815,6 +825,8 @@ class VehicleClient:
     def simGetGroundTruthEnvironment(self, vehicle_name = ''):
         """
         Get ground truth environment state
+
+        The position inside the returned EnvironmentState is in the frame of the vehicle's starting point
 
         Args:
             vehicle_name (str, optional): Name of the vehicle
@@ -1105,7 +1117,7 @@ class VehicleClient:
 
 #----------------------------------- Multirotor APIs ---------------------------------------------
 class MultirotorClient(VehicleClient, object):
-    def __init__(self, ip = "", port = 41451, timeout_value = 3600):
+    def __init__(self, ip = "", port = RPCLIB_PORT_MULTIROTOR, timeout_value = 3600):
         super(MultirotorClient, self).__init__(ip, port, timeout_value)
 
     def takeoffAsync(self, timeout_sec = 20, vehicle_name = ''):
@@ -1182,10 +1194,12 @@ class MultirotorClient(VehicleClient, object):
         return self.client.call_async('moveByVelocityZBodyFrame', vx, vy, z, duration, drivetrain, yaw_mode, vehicle_name)
 
     def moveByAngleZAsync(self, pitch, roll, z, yaw, duration, vehicle_name = ''):
-        return self.client.call_async('moveByAngleZ', pitch, roll, z, yaw, duration, vehicle_name)
+        logging.warning("moveByAngleZAsync API is deprecated, use moveByRollPitchYawZAsync() API instead")
+        return self.client.call_async('moveByRollPitchYawZ', roll, -pitch, -yaw, z, duration, vehicle_name)
 
     def moveByAngleThrottleAsync(self, pitch, roll, throttle, yaw_rate, duration, vehicle_name = ''):
-        return self.client.call_async('moveByAngleThrottle', pitch, roll, throttle, yaw_rate, duration, vehicle_name)
+        logging.warning("moveByAngleThrottleAsync API is deprecated, use moveByRollPitchYawrateThrottleAsync() API instead")
+        return self.client.call_async('moveByRollPitchYawrateThrottle', roll, -pitch, -yaw_rate, throttle, duration, vehicle_name)
 
     def moveByVelocityAsync(self, vx, vy, vz, duration, drivetrain = DrivetrainType.MaxDegreeOfFreedom, yaw_mode = YawMode(), vehicle_name = ''):
         """
@@ -1544,6 +1558,8 @@ class MultirotorClient(VehicleClient, object):
 #query vehicle state
     def getMultirotorState(self, vehicle_name = ''):
         """
+        The position inside the returned MultirotorState is in the frame of the vehicle's starting point
+
         Args:
             vehicle_name (str, optional): Vehicle to get the state of
 
@@ -1569,7 +1585,7 @@ class MultirotorClient(VehicleClient, object):
 
 #----------------------------------- Car APIs ---------------------------------------------
 class CarClient(VehicleClient, object):
-    def __init__(self, ip = "", port = 41451, timeout_value = 3600):
+    def __init__(self, ip = "", port = RPCLIB_PORT_CAR, timeout_value = 3600):
         super(CarClient, self).__init__(ip, port, timeout_value)
 
     def setCarControls(self, controls, vehicle_name = ''):
@@ -1584,6 +1600,8 @@ class CarClient(VehicleClient, object):
 
     def getCarState(self, vehicle_name = ''):
         """
+        The position inside the returned CarState is in the frame of the vehicle's starting point
+
         Args:
             vehicle_name (str, optional): Name of vehicle
 
