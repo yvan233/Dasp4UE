@@ -1,0 +1,31 @@
+{
+	"SettingsVersion": 1.2,
+	"ViewMode":"SpringArmChase",
+	"ClockType": "ScalableClock",
+	"ClockSpeed": 1,
+	"OriginGeopoint": {
+	  "Latitude": 40.05405620434274,
+	  "Longitude": 116.16872381923261, 
+	  "Altitude": 150
+	},
+	"CameraDefaults": {
+	  "CaptureSettings": [
+		{
+		  "ImageType": 0,
+		  "Width": 384,
+		  "Height": 216
+		}
+	  ]},
+	"Vehicles": {
+	  "Uav0": {
+		"VehicleType": "SimpleFlight",
+		"X": 0, "Y": 0, "Z": -2,
+		"Yaw": 180
+	  },
+	  "Uav1": {
+		"VehicleType": "SimpleFlight",
+		"X": 5, "Y": 0, "Z": -2,
+		"Yaw": 180
+	  }
+	}
+  }

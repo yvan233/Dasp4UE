@@ -13,7 +13,7 @@ state = car.get_car_state()
 pitch, roll, yaw = state["orientation"]
 yaw = math.degrees(yaw)
 print(f"{geo_point[0]},{geo_point[1]},{yaw}")
-
+    
 # 轨迹规划
 nav = NAV() 
 origin_point = wgs84_to_gcj02(geo_point[0],geo_point[1])  # wgs84转高德地图坐标

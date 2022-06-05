@@ -5,22 +5,19 @@ import math
 """
 {
 	"SettingsVersion": 1.2,
-
+	"ClockType": "ScalableClock",
+	"ViewMode": "Front",
 	"Vehicles": {
+		"test3_drone": {
+			"VehicleType": "SimpleFlight",
+			"X": 7, "Y": 7, "Z": -2
+		},
 		"cv_car": {
 			"VehicleType": "PhysXCar",
-			"X": 0, "Y": 7, "Z": 0		
-		},
-		"test2_cv": {
-			"VehicleType": "ComputerVision",
-			"X": 0, "Y": 3, "Z": 0		
-		},
-		"test3_drone": {
-			"VehicleType": "SimpleFlight"
+			"X": 0, "Y": 7, "Z": -2
 		}
 	}
-
-  }
+}
 """
 
 def list2Pose(list):
@@ -28,11 +25,13 @@ def list2Pose(list):
         airsim.to_quaternion(math.radians(list[3]), math.radians(list[4]), math.radians(list[5])))
 client = airsim.CarClient()
 client.confirmConnection()
+client.enableApiControl(True,vehicle_name="cv_car")
+client.armDisarm(True,vehicle_name="cv_car")
 
 # x,y,z,pitch,roll,yaw
 pose1 = [20,30,-50,-30,0,-120]
 pose2 = [20,-60,-50,-40,0,135]
 
-airsim.wait_key('Press any key to switch pose 1')
+# airsim.wait_key('Press any key to switch pose 1')
 camera_pose = list2Pose(pose1)
 client.simSetCameraPose(4, camera_pose, vehicle_name="cv_car")
