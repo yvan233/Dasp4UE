@@ -7,7 +7,7 @@ import csv
 import sys
 import socket
 from threading import Thread
-from pymap3d import enu2geodetic,geodetic2enu
+from pymap3d import enu2geodetic,geodetic2ned
 
 def gps2airsim(lon,lat,h,lon0,lat0,h0):
     '''
@@ -24,9 +24,9 @@ def gps2airsim(lon,lat,h,lon0,lat0,h0):
      - ay: float，北N
      - az: float，天U
     '''
-    ax,ay,az = geodetic2enu(lat,lon,h,lat0,lon0,h0)
+    ax,ay,az = geodetic2ned(lat,lon,h,lat0,lon0,h0)
     
-    return airsim.Vector3r(ay,ax,-az)
+    return airsim.Vector3r(ax,ay,az)
 
 class AirSimUavAgent():
     """
