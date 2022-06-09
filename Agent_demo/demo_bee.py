@@ -1,6 +1,8 @@
 # 特朗普位置：116.16822825174731, 40.05380267711057, 173.1387481689453
+# startplayer 位置，-39340 6175 600
 import sys
 sys.path.insert(1,".")  # 把上一级目录加入搜索路径
+print(sys.path)
 from Agent.AirSimUavAgent import AirSimUavAgent
 
 UE_ip = "127.0.0.1"
@@ -18,17 +20,15 @@ gps_path = [(116.1682074385,40.053804674937545,173.44400024414062),
 
 uav = AirSimUavAgent(origin_geopoint, ip = UE_ip, vehicle_name= "Uav0", origin_pos=origin_pos)
 
-
 print(uav.get_state())
 print(uav.get_collision())
 print(uav.get_gps())
 
-
-
-
 uav.take_off(waited = True)
-uav.uav.rotateToYawAsync(90,margin=30).join()
 
-uav.move_on_gps_path(gps_path, velocity=1, waited=True)
+# 转向
+# uav.uav.rotateToYawAsync(90,margin=30).join()
+
+uav.move_on_gps_path(gps_path, velocity=0.6, waited=True)
 
 uav.land(waited = True)

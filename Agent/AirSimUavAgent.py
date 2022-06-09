@@ -7,7 +7,7 @@ import csv
 import sys
 import socket
 from threading import Thread
-from pymap3d import enu2geodetic,geodetic2ned
+from pymap3d import ned2geodetic,geodetic2ned
 
 def gps2airsim(lon,lat,h,lon0,lat0,h0):
     '''
