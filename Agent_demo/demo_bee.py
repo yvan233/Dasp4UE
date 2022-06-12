@@ -2,7 +2,6 @@
 # startplayer 位置，-39340 6175 600
 import sys
 sys.path.insert(1,".")  # 把上一级目录加入搜索路径
-print(sys.path)
 from Agent.AirSimUavAgent import AirSimUavAgent
 
 UE_ip = "127.0.0.1"
