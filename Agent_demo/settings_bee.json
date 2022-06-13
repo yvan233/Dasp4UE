@@ -11,14 +11,6 @@
 	"PawnPaths": {
 		"Bee":{"PawnBP":"Class'/Game/newFly/BP_FlyingPawn.BP_FlyingPawn_C'"}
 		},
-	"CameraDefaults": {
-	  "CaptureSettings": [
-		{
-		  "ImageType": 0,
-		  "Width": 384,
-		  "Height": 216
-		}
-	  ]},
 	"Vehicles": {
 	  "Uav0": {
 		"VehicleType": "SimpleFlight",

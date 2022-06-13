@@ -8,14 +8,6 @@
 	  "Longitude": 116.16872381923261, 
 	  "Altitude": 150
 	},
-	"CameraDefaults": {
-	  "CaptureSettings": [
-		{
-		  "ImageType": 0,
-		  "Width": 384,
-		  "Height": 216
-		}
-	  ]},
 	"Vehicles": {
 	  "Uav0": {
 		"VehicleType": "SimpleFlight",
