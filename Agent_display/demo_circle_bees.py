@@ -59,7 +59,7 @@ uav7 = AirSimUavAgent(origin_geopoint, ip = UE_ip, vehicle_name= "Uav7", origin_
 
 radius = 1
 center = [-28+3,-44.5]
-direction = [1,0.2]
+direction = [1,0.268] # tan15°
 altitude = 1+22
 
 uav0.take_off()
