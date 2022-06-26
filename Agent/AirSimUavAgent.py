@@ -41,6 +41,7 @@ class AirSimUavAgent():
         7. 记录无人机的控制过程
         8. 停止记录
         9. 重置无人机
+        
     """
     def __init__(self, origin_geopoint, ip = "", vehicle_name = "", control_flag = False, origin_pos = [0, 0, 0]):
         image_size = (84, 84, 1)  # image shape for default gym env
@@ -125,6 +126,7 @@ class AirSimUavAgent():
     def move_to_position(self, x, y, z, velocity, waited=False,
             drivetrain=airsim.DrivetrainType.MaxDegreeOfFreedom, yaw_mode=airsim.YawMode()):
         # 无人机位置控制函数封装
+        # 如果需要uav始终朝向速度方向需要设置 drivetrain=airsim.DrivetrainType.ForwardOnly, yaw_mode=airsim.YawMode(False, 0)
         x -= self.origin_pos[0]
         y -= self.origin_pos[1]
         z -= self.origin_pos[2]
@@ -168,6 +170,16 @@ class AirSimUavAgent():
             self.uav.moveByVelocityAsync(vx, vy, vz, duration, drivetrain=drivetrain, yaw_mode=yaw_mode, vehicle_name=self.name).join()
         else:
             self.uav.moveByVelocityAsync(vx, vy, vz, duration, drivetrain=drivetrain, yaw_mode=yaw_mode,vehicle_name=self.name)
+
+
+    def move_by_velocity_z(self, vx, vy, z, duration, waited=False, 
+            drivetrain=airsim.DrivetrainType.MaxDegreeOfFreedom, yaw_mode=airsim.YawMode()):
+        # 无人机固定高度速度控制函数封装
+        if waited:
+            self.uav.moveByVelocityZAsync(vx, vy, z-self.origin_pos[2], duration, drivetrain=drivetrain, yaw_mode=yaw_mode, vehicle_name=self.name).join()
+        else:
+            self.uav.moveByVelocityZAsync(vx, vy, z-self.origin_pos[2], duration, drivetrain=drivetrain, yaw_mode=yaw_mode,vehicle_name=self.name)
+
 
     def get_image(self):
         # 获取无人机图像
