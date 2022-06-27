@@ -7,8 +7,10 @@ import math
 import time
 
 def calculateVelocity(x_d, y_d, leader_state, follower_state):
-    min_velocity = 0.01
+    # 阈值
+    threshold = 0.1
     max_velocity = 5.0
+    Kd = 2
     # 机体坐标系下目标位置
     X_d = np.array([[x_d],[y_d]])
     # 旋转矩阵
@@ -25,10 +27,17 @@ def calculateVelocity(x_d, y_d, leader_state, follower_state):
     Vel = R_b_e@omega
 
     V_l = np.array([[leader_state["linear_velocity"][0]], [leader_state["linear_velocity"][1]]])
-    Vel += V_l
+    V_f = np.array([[follower_state["linear_velocity"][0]], [follower_state["linear_velocity"][1]]])
+    
+    Acc_l = np.array([[leader_state["linear_acceleration"][0]], [leader_state["linear_acceleration"][1]]])
+    # pd控制
+    Vel += V_l + Kd*Acc_l
 
-    # if np.linalg.norm(Vel) < min_velocity:
-    #     pass
+    flag = False
+    # 判断是否应当停止
+    if np.linalg.norm(Vel) < threshold and np.linalg.norm(V_f) < threshold:
+        flag = True
+
     # if np.linalg.norm(Vel) > max_velocity:
     #     Vel = Vel/np.linalg.norm(Vel)*max_velocity
 
@@ -39,7 +48,7 @@ def calculateVelocity(x_d, y_d, leader_state, follower_state):
     else:
         yaw_rate = 45*math.sin(yaw_l-yaw_f)
     v_x_f, v_y_f = Vel[0][0], Vel[1][0]
-    return v_x_f, v_y_f, yaw_rate
+    return flag, v_x_f, v_y_f, yaw_rate 
 
 UE_ip = "127.0.0.1"
 origin_geopoint = (116.16872381923261, 40.05405620434274,150)
@@ -49,13 +58,13 @@ follower1 = AirSimUavAgent(origin_geopoint, ip = UE_ip, vehicle_name= "Uav1", or
 follower2 = AirSimUavAgent(origin_geopoint, ip = UE_ip, vehicle_name= "Uav2", origin_pos=[-3, 0, -2])
 # 初始化，建立连接
 leader.take_off()      # 起飞
-leader.move_to_position(0,0,-10,3)
+leader.move_to_position(0,0,-20,3)
 
 follower1.take_off()      # 起飞
-follower1.move_to_position(0,3,-10,3)
+follower1.move_to_position(0,3,-20,3)
 
 follower2.take_off()      # 起飞
-follower2.move_to_position(-3,0,-10,3,waited=True)
+follower2.move_to_position(-3,0,-20,3,waited=True)
 
 x_d = -3*math.cos(math.pi/3)
 y_d = 3*math.sin(math.pi/3)
@@ -67,13 +76,13 @@ while True:
     follower2_state = follower2.get_state()
 
     z = leader_state["position"][2]
-    v1_x, v1_y, yaw1_rate = calculateVelocity(x_d, y_d, leader_state, follower1_state)
-    v2_x, v2_y, yaw2_rate = calculateVelocity(x_d, -y_d, leader_state, follower2_state)
+    flag1, v1_x, v1_y, yaw1_rate = calculateVelocity(x_d, y_d, leader_state, follower1_state)
+    flag2, v2_x, v2_y, yaw2_rate = calculateVelocity(x_d, -y_d, leader_state, follower2_state)
 
     follower1.move_by_velocity_z(v1_x, v1_y, z, duration = 0.2, yaw_mode=airsim.YawMode(True, yaw1_rate))
     follower2.move_by_velocity_z(v2_x, v2_y, z, duration = 0.2,  yaw_mode=airsim.YawMode(True, yaw2_rate))
     # print(time.time(),v1_x,v1_y,v2_x,v2_y)
-    if v1_x*v1_x + v1_y*v1_y < 0.01 and v2_x*v2_x + v2_y*v2_y < 0.01:
+    if flag1 and flag2:
         break
 
 points = [airsim.Vector3r(30, 0, -20),
@@ -89,8 +98,8 @@ while True:
     follower2_state = follower2.get_state()
 
     z = leader_state["position"][2]
-    v1_x, v1_y, yaw1_rate = calculateVelocity(x_d, y_d, leader_state, follower1_state)
-    v2_x, v2_y, yaw2_rate = calculateVelocity(x_d, -y_d, leader_state, follower2_state)
+    flag1, v1_x, v1_y, yaw1_rate = calculateVelocity(x_d, y_d, leader_state, follower1_state)
+    flag2, v2_x, v2_y, yaw2_rate = calculateVelocity(x_d, -y_d, leader_state, follower2_state)
 
     follower1.move_by_velocity_z(v1_x, v1_y, z, duration = 0.2, yaw_mode=airsim.YawMode(True, yaw1_rate))
     follower2.move_by_velocity_z(v2_x, v2_y, z, duration = 0.2,  yaw_mode=airsim.YawMode(True, yaw2_rate))
