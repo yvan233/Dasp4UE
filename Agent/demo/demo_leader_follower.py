@@ -4,7 +4,6 @@ import sys
 sys.path.insert(1,".")
 from Agent.AirSimUavAgent import AirSimUavAgent
 import math
-import time
 
 def calculateVelocity(x_d, y_d, leader_state, follower_state):
     # 阈值
@@ -103,4 +102,3 @@ while True:
 
     follower1.move_by_velocity_z(v1_x, v1_y, z, duration = 0.2, yaw_mode=airsim.YawMode(True, yaw1_rate))
     follower2.move_by_velocity_z(v2_x, v2_y, z, duration = 0.2,  yaw_mode=airsim.YawMode(True, yaw2_rate))
-    # print(time.time(),v1_x,v1_y,v2_x,v2_y)
