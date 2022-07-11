@@ -22,18 +22,21 @@ class AirSimCarAgent():
         8. 停止记录
         9. 重置车辆
     """
-    def __init__(self, ip = "", vehicle_name = "", control_flag = False):
+    def __init__(self, ip = "", vehicle_name = "", control_flag = False, origin_pos = [0, 0, 0]):
         image_size = (84, 84, 1)  # image shape for default gym env
         ## name
         self.name = vehicle_name
+        self.origin_pos = origin_pos
         self.recordflag = False
-        self.header = ['timestamp', 'position', 'orientation', 'speed', 'throttle', 'steering', 'brake', 
-            'linear_velocity', 'linear_acceleration', 'angular_velocity', 'angular_acceleration']
+        self.header = ['timestamp', 'position_x', 'position_y', 'position_z', 'pitch', 'roll', 'yaw', 
+            'speed', 'throttle', 'steering', 'brake', 'linear_velocity_x', 'linear_velocity_y', 'linear_velocity_z', 
+            'linear_acceleration_x', 'linear_acceleration_y', 'linear_acceleration_z', 'angular_velocity_x', 'angular_velocity_y', 
+            'angular_velocity_z', 'angular_acceleration_x', 'angular_acceleration_y', 'angular_acceleration_z']
         self.connect(ip, control_flag)
 
     def connect(self, ip, control_flag):
         # 连接AirSim模拟器
-        self.car = airsim.CarClient(ip=ip)
+        self.car = airsim.CarClient(ip=ip,port = 41451)
         self.car.confirmConnection()
         self.car.enableApiControl(True,self.name) if not control_flag else self.car.enableApiControl(False,self.name)
         self.car.armDisarm(True,self.name) if not control_flag else self.car.enableApiControl(False,self.name)
@@ -47,16 +50,28 @@ class AirSimCarAgent():
         kinematics = State.kinematics_estimated
         state = {
             "timestamp":str(State.timestamp)[:-6],
-            "position":[round(i,DIG) for i in kinematics.position.to_numpy_array().tolist()],
-            "orientation":[round(i,DIG) for i in airsim.to_eularian_angles(kinematics.orientation)],
+            "position_x":round(kinematics.position.x_val+self.origin_pos[0],DIG),
+            "position_y":round(kinematics.position.y_val+self.origin_pos[1],DIG),
+            "position_z":round(kinematics.position.z_val+self.origin_pos[2],DIG),
+            "pitch":round(airsim.to_eularian_angles(kinematics.orientation)[0],DIG),
+            "roll":round(airsim.to_eularian_angles(kinematics.orientation)[1],DIG),
+            "yaw":round(airsim.to_eularian_angles(kinematics.orientation)[2],DIG),
             "speed": round(State.speed,DIG),
             "throttle":round(action.throttle,DIG),
             "steering":round(action.steering*50,DIG),
             "brake":round(action.brake,DIG),
-            "linear_velocity":[round(i,DIG) for i in kinematics.linear_velocity.to_numpy_array().tolist()],
-            "linear_acceleration":[round(i,DIG) for i in kinematics.linear_acceleration.to_numpy_array().tolist()],
-            "angular_velocity":[round(i,DIG) for i in kinematics.angular_velocity.to_numpy_array().tolist()],
-            "angular_acceleration":[round(i,DIG) for i in kinematics.angular_acceleration.to_numpy_array().tolist()]
+            "linear_velocity_x":round(kinematics.linear_velocity.x_val,DIG),
+            "linear_velocity_y":round(kinematics.linear_velocity.y_val,DIG),
+            "linear_velocity_z":round(kinematics.linear_velocity.z_val,DIG),
+            "linear_acceleration_x":round(kinematics.linear_acceleration.x_val,DIG),
+            "linear_acceleration_y":round(kinematics.linear_acceleration.y_val,DIG),
+            "linear_acceleration_z":round(kinematics.linear_acceleration.z_val,DIG),
+            "angular_velocity_x":round(kinematics.angular_velocity.x_val,DIG),
+            "angular_velocity_y":round(kinematics.angular_velocity.y_val,DIG),
+            "angular_velocity_z":round(kinematics.angular_velocity.z_val,DIG),
+            "angular_acceleration_x":round(kinematics.angular_acceleration.x_val,DIG),
+            "angular_acceleration_y":round(kinematics.angular_acceleration.y_val,DIG),
+            "angular_acceleration_z":round(kinematics.angular_acceleration.z_val,DIG),
         }
         return state
 
@@ -64,6 +79,9 @@ class AirSimCarAgent():
         # 获取车辆的GPS信息
         gps = self.car.getGpsData(vehicle_name=self.name).gnss.geo_point
         return gps.longitude, gps.latitude
+
+    def get_object_pose(self, object_name):
+        return self.car.simGetObjectPose(object_name).position.to_numpy_array()
 
     def get_collision(self):
         # 获取车辆碰撞信息
@@ -108,7 +126,7 @@ class AirSimCarAgent():
         lidar_data = self.car.getLidarData("Lidar1", self.name)
 
         if (len(lidar_data.point_cloud) < 3):
-            print("No points received from Lidar data")
+            # print("No points received from Lidar data")
             return np.array([])
         else:
             points = np.array(lidar_data.point_cloud, dtype=np.dtype('f4'))
@@ -121,8 +139,7 @@ class AirSimCarAgent():
 
     def startRecording(self, rootpath = "D:/Qiyuan/Record"):
         # 开始记录
-        timelabel = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime(time.time()))
-        self.path = os.path.join(rootpath, timelabel)
+        self.path = os.path.join(rootpath, self.name)
         os.system('mkdir "%s"' %self.path) 
         os.system('mkdir "%s"' %self.path+"/pointcloud") 
         os.system('mkdir "%s"' %self.path+"/image") 
@@ -158,17 +175,41 @@ class AirSimCarAgent():
                 np.save(filepath1, lidar_data)
                 cv2.imwrite(filepath2, image)
 
+    # 记录车辆状态数据
+    def record_car_state(self):
+        while True:
+            # 如果打开录制
+            if self.recordflag:
+                image, data = self.get_image()
+                lidar_data = self.get_lidar()
+                state = self.get_car_state()
+                time_stamp = state["timestamp"]
+                filepath0 = os.path.join(self.path, "record.csv")
+                filepath1 = os.path.join(self.path, "pointcloud/pointcloud_" + time_stamp)
+                filepath2 = os.path.join(self.path, "image/img_" + time_stamp+".jpg")
+                with open(filepath0, 'a', newline='',encoding='utf-8-sig') as f: 
+                    writer = csv.DictWriter(f,fieldnames=self.header) 
+                    writer.writerow(state) 
+                np.save(filepath1, lidar_data)
+                cv2.imwrite(filepath2, image)
+            time.sleep(0.001)
+
+
 if __name__ == '__main__':
     # 开启udp视频流
     UE_ip = "127.0.0.1"
     remote_ip = "127.0.0.1"
 
-    record = AirSimCarAgent(ip = UE_ip)
-    thread = Thread(target=record.upload_video_lidar, args = (remote_ip,), daemon=True)
-    thread.start()
-    record.startRecording()
+    car = AirSimCarAgent(ip = UE_ip, vehicle_name= "Car0")
 
-    car = AirSimCarAgent(ip = UE_ip, vehicle_name= "Escaper")
+    record = AirSimCarAgent(ip = UE_ip,vehicle_name= "Car0")
+    thread = Thread(target=record.record_car_state, daemon=True)
+    thread.start()
+
+    timelabel = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime(time.time()))
+    rootpath = os.path.join("D:/Qiyuan/Record", timelabel)
+    record.startRecording(rootpath)
+
     print(car.get_car_state())
     print(car.get_collision())
     # 前进
@@ -195,6 +236,6 @@ if __name__ == '__main__':
     }
     car.do_action(action)
     time.sleep(2)
-    car.reset()
-
+   
     record.stopRecording()
+    car.reset()

@@ -27,10 +27,8 @@ class AirSimCarAgent():
         ## name
         self.name = vehicle_name
         self.recordflag = False
-        self.header = ['timestamp', 'position_x', 'position_y', 'position_z', 'pitch', 'roll', 'yaw', 
-            'speed', 'throttle', 'steering', 'brake', 'linear_velocity_x', 'linear_velocity_y', 'linear_velocity_z', 
-            'linear_acceleration_x', 'linear_acceleration_y', 'linear_acceleration_z', 'angular_velocity_x', 'angular_velocity_y', 
-            'angular_velocity_z', 'angular_acceleration_x', 'angular_acceleration_y', 'angular_acceleration_z']
+        self.header = ['timestamp', 'position', 'orientation', 'speed', 'throttle', 'steering', 'brake', 
+            'linear_velocity', 'linear_acceleration', 'angular_velocity', 'angular_acceleration']
         self.connect(ip, control_flag)
 
     def connect(self, ip, control_flag):
@@ -49,28 +47,16 @@ class AirSimCarAgent():
         kinematics = State.kinematics_estimated
         state = {
             "timestamp":str(State.timestamp)[:-6],
-            "position_x":round(kinematics.position.x_val,DIG),
-            "position_y":round(kinematics.position.y_val,DIG),
-            "position_z":round(kinematics.position.z_val,DIG),
-            "pitch":round(airsim.to_eularian_angles(kinematics.orientation)[0],DIG),
-            "roll":round(airsim.to_eularian_angles(kinematics.orientation)[1],DIG),
-            "yaw":round(airsim.to_eularian_angles(kinematics.orientation)[2],DIG),
+            "position":[round(i,DIG) for i in kinematics.position.to_numpy_array().tolist()],
+            "orientation":[round(i,DIG) for i in airsim.to_eularian_angles(kinematics.orientation)],
             "speed": round(State.speed,DIG),
             "throttle":round(action.throttle,DIG),
             "steering":round(action.steering*50,DIG),
             "brake":round(action.brake,DIG),
-            "linear_velocity_x":round(kinematics.linear_velocity.x_val,DIG),
-            "linear_velocity_y":round(kinematics.linear_velocity.y_val,DIG),
-            "linear_velocity_z":round(kinematics.linear_velocity.z_val,DIG),
-            "linear_acceleration_x":round(kinematics.linear_acceleration.x_val,DIG),
-            "linear_acceleration_y":round(kinematics.linear_acceleration.y_val,DIG),
-            "linear_acceleration_z":round(kinematics.linear_acceleration.z_val,DIG),
-            "angular_velocity_x":round(kinematics.angular_velocity.x_val,DIG),
-            "angular_velocity_y":round(kinematics.angular_velocity.y_val,DIG),
-            "angular_velocity_z":round(kinematics.angular_velocity.z_val,DIG),
-            "angular_acceleration_x":round(kinematics.angular_acceleration.x_val,DIG),
-            "angular_acceleration_y":round(kinematics.angular_acceleration.y_val,DIG),
-            "angular_acceleration_z":round(kinematics.angular_acceleration.z_val,DIG),
+            "linear_velocity":[round(i,DIG) for i in kinematics.linear_velocity.to_numpy_array().tolist()],
+            "linear_acceleration":[round(i,DIG) for i in kinematics.linear_acceleration.to_numpy_array().tolist()],
+            "angular_velocity":[round(i,DIG) for i in kinematics.angular_velocity.to_numpy_array().tolist()],
+            "angular_acceleration":[round(i,DIG) for i in kinematics.angular_acceleration.to_numpy_array().tolist()]
         }
         return state
 
@@ -182,7 +168,7 @@ if __name__ == '__main__':
     thread.start()
     record.startRecording()
 
-    car = AirSimCarAgent(ip = UE_ip, vehicle_name= "Car0")
+    car = AirSimCarAgent(ip = UE_ip, vehicle_name= "Escaper")
     print(car.get_car_state())
     print(car.get_collision())
     # 前进
