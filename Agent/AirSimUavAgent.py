@@ -181,9 +181,10 @@ class AirSimUavAgent():
             self.uav.moveByVelocityZAsync(vx, vy, z-self.origin_pos[2], duration, drivetrain=drivetrain, yaw_mode=yaw_mode,vehicle_name=self.name)
 
 
-    def get_image(self):
+    def get_image(self, camera_name = "front_center"):
         # 获取无人机图像
-        img_response = self.uav.simGetImage("0", airsim.ImageType.Scene, self.name)
+        # camera_name: 无人机相机名称, 可设置成"front_center","front_right","front_left","bottom_center"和"back_center"
+        img_response = self.uav.simGetImage(camera_name, airsim.ImageType.Scene, self.name) 
         np_response_image = np.asarray(bytearray(img_response), dtype="uint8")
         decoded_frame = cv2.imdecode(np_response_image, cv2.IMREAD_COLOR)
         # cv2.imwrite("result.jpg", decoded_frame)
@@ -197,7 +198,6 @@ class AirSimUavAgent():
         return encoded_jpeg
 
 if __name__ == '__main__':
-    # 开启udp视频流
     UE_ip = "127.0.0.1"
     origin_pos = [0, 0, -2]
     
